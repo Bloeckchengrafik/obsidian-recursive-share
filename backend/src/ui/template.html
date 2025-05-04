@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title }} - Rendered Preview</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        p {
+            color: #555;
+        }
+
+        .content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #777;
+        }
+
+        .toolbar {
+            margin-bottom: 20px;
+            list-style: none;
+            padding: 0;
+            display: flex;
+            gap: 10px;
+            flex-direction: row-reverse;
+        }
+
+        .toolbar button {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .toolbar button:hover {
+            background-color: #0056b3;
+        }
+
+        .raw {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<ul class="toolbar">
+    <li>
+        <button onclick="copyMarkdown()">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+            </svg>
+            Copy Markdown
+        </button>
+    </li>
+    <li>
+        <button onclick="copyLink()">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/>
+                <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/>
+            </svg>
+            Copy Link
+        </button>
+    </li>
+</ul>
+<div class="content">
+    <h1>{{ title }}</h1>
+    <p>
+        {{ md | safe }}
+    </p>
+</div>
+
+<footer>
+    &copy; Christian Bergschneider 2025. Licensed under the MIT license.
+</footer>
+
+<script>
+    async function copyMarkdown() {
+        let id = window.location.pathname.split("/").pop()
+        let uri = window.location.href.replace(`view/${id}`, `api/${id}/{{ title | safe }}`)
+        let response = await fetch(uri)
+            .then(response => response.text());
+
+        navigator.clipboard.writeText(response)
+            .then(() => alert('Markdown copied to clipboard!'))
+            .catch(err => console.error('Failed to copy:', err));
+    }
+
+    function copyLink() {
+        navigator.clipboard.writeText(window.location.href)
+            .then(() => alert('Link copied to clipboard!'))
+            .catch(err => console.error('Failed to copy:', err));
+    }
+
+    MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']], // Configure delimiters for inline math
+            displayMath: [['$$', '$$'], ['\\[', '\\]']] // Configure delimiters for display math
+        },
+        svg: {
+            fontCache: 'global' // Cache fonts globally for better performance
+        }
+    };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
+</html>

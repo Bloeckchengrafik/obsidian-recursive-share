@@ -1,0 +1,3 @@
+port = 8181
+auth_tokens = [ "development" ]
+storage_path = "storage"
