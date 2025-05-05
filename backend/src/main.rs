@@ -9,6 +9,7 @@ use rocket::data::{Limits, ToByteUnit};
 use rocket::http::Method;
 use rocket::{launch, routes};
 use rocket_cors::{AllowedOrigins, CorsOptions};
+use std::net::IpAddr;
 
 #[launch]
 async fn rocket() -> _ {
@@ -35,6 +36,7 @@ async fn rocket() -> _ {
         .attach(cors.to_cors().unwrap())
         .configure(rocket::Config {
             port,
+            address: IpAddr::from([0u8, 0u8, 0u8, 0u8]),
             limits: Limits::default()
                 .limit("file", 1.gibibytes())
                 .limit("data-form", 1.gibibytes()),
