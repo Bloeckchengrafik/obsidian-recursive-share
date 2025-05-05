@@ -27,8 +27,9 @@ async fn rocket() -> _ {
         )
         .allow_credentials(true);
 
-    std::fs::create_dir_all("tmp").unwrap();
-    unsafe { std::env::set_var("TMPDIR", "tmp") };
+    let tmp_path = format!("{}/tmp", config.get_storage_path().await);
+    std::fs::create_dir_all(tmp_path.clone()).unwrap();
+    unsafe { std::env::set_var("TMPDIR", tmp_path) };
 
     rocket::build()
         .manage(config)
