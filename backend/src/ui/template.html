@@ -4,15 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ title }} - Rendered Preview</title>
-    <meta property="og:title" content="{{ title }} - Rendered Preview">
+    <meta property="og:title" content="{{ title }} - Recursive Share">
     <meta property="og:type" content="article">
     <meta property="og:description" content="Shared recursively using Obsidian Recursive Share">
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
             padding: 20px;
             background-color: #f4f4f4;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        dialog {
+            border: none;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+        }
+
+        .steps-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .close-button {
+            float: right;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1.2em;
         }
 
         h1 {
@@ -63,8 +93,43 @@
             background-color: #0056b3;
         }
 
-        .raw {
-            display: none;
+        .icon-prefix {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: center;
+            margin-right: 5px;
+            border-radius: 50%;
+        }
+
+        .icon-prefix.icon-done {
+            border: 2px solid transparent;
+            background: #28a745;
+            color: white;
+        }
+
+        .icon-prefix:not(.icon-done) {
+            border: 2px solid #2861a7;
+        }
+
+        .bold {
+            font-weight: bold;
+            display: contents;
+        }
+
+        .line-bottom {
+            position: absolute;
+            bottom: -16px;
+            left: 20px;
+            height: 17px;
+            width: 3px;
+            background-color: #2861a7;
+        }
+
+        .icon-prefix.icon-done + .line-bottom {
+            background-color: #28a745;
         }
     </style>
 </head>
@@ -72,19 +137,13 @@
 <ul class="toolbar">
     <li>
         <button onclick="copyMarkdown()">
-            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
-                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
-            </svg>
-            Copy Markdown
+            <i data-lucide="bookmark-plus"></i>
+            Add to Vault
         </button>
     </li>
     <li>
         <button onclick="copyLink()">
-            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/>
-                <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/>
-            </svg>
+            <i data-lucide="link"></i>
             Copy Link
         </button>
     </li>
@@ -100,6 +159,33 @@
     &copy; Christian Bergschneider 2025. Licensed under the MIT license.
 </footer>
 
+<dialog id="vault-popup" class="vault-popup">
+    <button class="close-button" onclick="document.getElementById('vault-popup').close()">×</button>
+    <h3>Next Steps</h3>
+    <ul class="steps-list">
+        <li class="step-item">
+            <div class="icon-prefix icon-done">
+                <i data-lucide="clipboard-check"></i>
+            </div>
+            Content has been copied to clipboard
+            <div class="line-bottom"></div>
+        </li>
+        <li class="step-item">
+            <div class="icon-prefix">
+                <i data-lucide="book-open-check"></i>
+            </div>
+            Paste the content into your vault
+            <div class="line-bottom"></div>
+        </li>
+        <li class="step-item">
+            <div class="icon-prefix">
+                <i data-lucide="command"></i>
+            </div>
+            Use "<span class="bold">Download attachments for current file</span>" to get attachments
+        </li>
+    </ul>
+</dialog>
+
 <script>
     async function copyMarkdown() {
         let id = window.location.pathname.split("/").pop()
@@ -108,7 +194,7 @@
             .then(response => response.text());
 
         navigator.clipboard.writeText(response)
-            .then(() => alert('Markdown copied to clipboard!'))
+            .then(() => document.getElementById('vault-popup').showModal())
             .catch(err => console.error('Failed to copy:', err));
     }
 
@@ -129,5 +215,9 @@
     };
 </script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+    lucide.createIcons();
+</script>
 </body>
 </html>
