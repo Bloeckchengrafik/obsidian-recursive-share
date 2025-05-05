@@ -92,7 +92,7 @@ export default class RecursiveSharePlugin extends Plugin {
 		this.addCommand({
 			id: 'share',
 			name: 'Share recursively',
-			editorCallback: (editor: Editor, ctx: MarkdownView | MarkdownFileInfo) => {
+			editorCallback: async (editor: Editor, ctx: MarkdownView | MarkdownFileInfo) => {
 				let view = ctx as MarkdownView;
 				let info = ctx as MarkdownFileInfo;
 				let name = info.file!.name
@@ -123,18 +123,13 @@ export default class RecursiveSharePlugin extends Plugin {
 					}
 				}
 
-				createShare(this.settings, name)
-					.then(([link, id]) => {
-						resourcesToUpload.push({
-							name: name,
-							value: content.replace(/##id##/g, id)
-						})
-						uploadFiles(resourcesToUpload, this.settings, id)
-						return link;
-					})
-					.then(share => {
-						new ShareLinkModal(this.app, share).open();
-					})
+				const [link, id] = await createShare(this.settings, name)
+				resourcesToUpload.push({
+					name: name,
+					value: content.replace(/##id##/g, id)
+				})
+				await uploadFiles(resourcesToUpload, this.settings, id)
+				new ShareLinkModal(this.app, link).open();
 			}
 		});
 
@@ -168,12 +163,6 @@ class RecursiveShareSettingsTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		containerEl.createEl('h2', {text: 'Recursive Share Settings'});
-		containerEl.createEl('a', {
-			text: 'Click here for a guide on how to host an instance',
-			href: 'https://github.com/Bloeckchengrafik/obsidian-recursive-share'
-		});
-
 		new Setting(containerEl)
 			.setName('Root Server URL')
 			.setDesc('You\'ll need a hosted instance')
@@ -195,6 +184,12 @@ class RecursiveShareSettingsTab extends PluginSettingTab {
 					this.plugin.settings.apiKey = value;
 					await this.plugin.saveSettings();
 				}));
+
+
+		containerEl.createEl('a', {
+			text: 'Click here for a guide on how to host an instance',
+			href: 'https://github.com/Bloeckchengrafik/obsidian-recursive-share'
+		});
 	}
 }
 
