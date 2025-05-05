@@ -20,6 +20,8 @@
 
 With Obsidian Recursive Share, you can create share links including images, drawings, and other embeds.
 
+Obsidian Recursive Share is a **third-party plugin** for [Obsidian](https://obsidian.md). 
+
 ## ✨ Features
 
 - 📤 Share individual notes with others
