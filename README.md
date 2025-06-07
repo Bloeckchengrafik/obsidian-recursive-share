@@ -1,4 +1,4 @@
-# 🔄 Obsidian Recursive Share
+# 🔄 Recursive Share for Obsidian
 
 *Version: 1.0.0 | Requires Obsidian: 0.15.0+*
 
@@ -18,9 +18,9 @@
 
 ## 🌟 Overview
 
-With Obsidian Recursive Share, you can create share links including images, drawings, and other embeds.
+With Recursive Share for Obsidian, you can create share links including images, drawings, and other embeds.
 
-Obsidian Recursive Share is a **third-party plugin** for [Obsidian](https://obsidian.md). 
+Recursive Share for Obsidian is a **third-party plugin** for [Obsidian](https://obsidian.md).
 
 ## ✨ Features
 
@@ -83,7 +83,7 @@ You can configure these in the plugin settings tab.
 
 ## 👥 Contributing
 
-We welcome contributions to Obsidian Recursive Share! Whether it's bug fixes, feature additions, or documentation
+We welcome contributions to Recursive Share for Obsidian! Whether it's bug fixes, feature additions, or documentation
 improvements, your help is appreciated.
 
 ### 🛣️ Contribution Workflow
@@ -120,7 +120,7 @@ This project is licensed under the MIT License.
 
 ## 🆘 Support
 
-Need help with Obsidian Recursive Share? We're here to assist you!
+Need help with Recursive Share for Obsidian? We're here to assist you!
 If you encounter a bug or have a feature request:
 
 1. Check the [GitHub Issues](https://github.com/Bloeckchengrafik/obsidian-recursive-share/issues) to see if it has
@@ -140,5 +140,3 @@ Before reaching out for support, try these troubleshooting steps:
 3. **Check Console Errors**: Open the developer console (Ctrl+Shift+I) to check for errors
 4. **Disable Other Plugins**: Temporarily disable other plugins to check for conflicts
 5. **Try in a New Vault**: Test if the issue persists in a clean vault
-
-
