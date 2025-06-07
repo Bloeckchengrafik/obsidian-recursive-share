@@ -248,12 +248,6 @@ export class ShareLinkModal extends Modal {
 		});
 		linkInput.setAttr("readonly", "true"); // Make it read-only so user doesn't accidentally edit
 
-		// Optional: Add some basic styling for the input field
-		linkInput.style.width = "100%";
-		linkInput.style.padding = "5px";
-		linkInput.style.marginTop = "10px";
-		linkInput.style.marginBottom = "10px";
-
 		// Add a button to copy the link
 		new ButtonComponent(contentEl)
 			.setButtonText("Copy Link")
@@ -262,13 +256,10 @@ export class ShareLinkModal extends Modal {
 				navigator.clipboard
 					.writeText(this.linkToShare)
 					.then(() => {
-						// Optionally, provide feedback to the user
 						this.close(); // Close the modal after copying
-						// You could also add a confirmation message instead of closing immediately
 					})
 					.catch((err) => {
 						console.error("Failed to copy link: ", err);
-						// Optionally, show an error message to the user
 					});
 			});
 	}
