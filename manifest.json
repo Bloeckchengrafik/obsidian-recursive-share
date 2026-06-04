@@ -3,7 +3,7 @@
 	"name": "Recursive Share",
 	"version": "1.0.1",
 	"minAppVersion": "0.15.0",
-	"description": "Share notes and resources with others",
+	"description": "Share notes and resources with others.",
 	"author": "Christian Bergschneider",
 	"authorUrl": "https://bloeckchengrafik.de",
 	"isDesktopOnly": false
